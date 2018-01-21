@@ -22,7 +22,7 @@ class Cmd(object):
         self.axis3 = 0
         self.axis4 = 0 
         self.axis5 = 0 #rotation 
-        self.btn0 = 0 # gachette legeremment appuyee
+        self.btn0 = 0 #gachette legeremment appuyee
         self.btn1 = 0 #fire
         self.btn2 = 0 #bouton a
         self.btn3 = 0 #bouton b
@@ -32,6 +32,7 @@ class Cmd(object):
         self.btn7 = 0
         self.btn8 = 0
         self.btn9 = 0
+	self.btn11 = 0
 
 class Service(object):
     def __init__(self, robot, linear_velocity=0.1, rotational_velocity=0.1, acceleration=0.1):
@@ -86,48 +87,70 @@ class Service(object):
 		        	air = not air
 				self.robot.speedl_tool([0, 0, 0, 0, 0, 0], acc=1, min_time =1)
 
-		    	if self.cmd.btn2:
+		    	#if self.cmd.btn2:
 		        	#toggle IO
-		        	air = not air
-				self.robot.speedl_tool([0, 0, 5, 0, 0, 0], acc=0.2, min_time =2)
+		        	#air = not air
+				#self.robot.speedl_tool([0, 0, 5, 0, 0, 0], acc=0.2, min_time =2)
 
-		    	if self.cmd.btn3:
+		    	if self.cmd.btn3 and self.cmd.btn5: #mod_tool_bouton_B -> MONTER
 		       		#toggle IO
 		        	air = not air
-				self.robot.speedl_tool([0, 0, -5, 0, 0, 0], acc=0.2, min_time =2)
+				self.robot.speedl_tool([0, 5, 0, 0, 0, 0], acc=0.2, min_time =2)		
+			else: #mod_base_bouton_B -> MONTER
+				 if self.cmd.btn3:
+					air = not air
+					self.robot.speedl([0,0,5,0,0,0],acc=0.2, min_time =2)
+			if self.cmd.btn4 and self.cmd.btn5: #mod_tool_bouton_C -> DESCENDRE
+		       		#toggle IO
+		        	air = not air
+				self.robot.speedl_tool([0, -5, 0, 0, 0, 0], acc=0.2, min_time =2)		
+			else: #mod_base_bouton_C -> DESCENDRE
+				 if self.cmd.btn4:
+					air = not air
+					self.robot.speedl([0,0,-5,0,0,0],acc=0.2, min_time =2)
+		    	
+			
+			if self.cmd.btn9: #position_start
+		        	print("pos1")
+		        	self.robot.movej([-1.539889160786764, -1.523339573537008, -1.5396083037005823, 4.66968297958374, 1.5880393981933594, 6.283281180981497], acc=1, vel=0.5)			
+	
 
-		    	if self.cmd.btn9:
-		        	print("moving to init pose")
-		        	self.robot.movej(self.init_pose, acc=1, vel=0.1)
-		    
+			if self.cmd.btn11: #position_start
+		        	print("pos2")
+		        	self.robot.movej([-1.539889160786764, -1.523339573537008, -1.5396083037005823, 4.66968297958374, 1.5880393981933594, 6.283281180981497], acc=1, vel=0.5)			
+		    	# X,Y,Z,Rx,Ry,Rz
 		    	#get linear speed from joystick
-		    	speeds[0] = -1 * self.cmd.axis0 * self.linear_velocity
-		    	speeds[1] = self.cmd.axis1 * self.linear_velocity
-		    	if self.cmd.btn4:
-		        	speeds[2] = -self.linear_velocity
-		    	if self.cmd.btn5:
-		        	speeds[2] = +self.linear_velocity
+			if(self.cmd.btn5):
+		    		speeds[0] = -1 * self.cmd.axis0 *self.linear_velocity
+		    		speeds[2] = -1*self.cmd.axis1 * self.linear_velocity
+			else:
+				speeds[0] = -1 * self.cmd.axis0 * self.linear_velocity
+		    		speeds[1] = self.cmd.axis1 * self.linear_velocity
 
+		    	if self.cmd.btn4 and self.cmd.btn1: #bouton_c
+		        	speeds[2] = -sself.linear_velocity
+			
+		    	if self.cmd.btn5 and self.cmd.btn1: #bouton_back
+		        	speeds[2] = +self.linear_velocity
+#mod_tool_bouton_B -> MONTER
 		    	#get rotational speed from joystick
-		    	speeds[4] = -1 * self.cmd.axis3 * self.rotational_velocity
-		    	speeds[3] = -1 * self.cmd.axis4 * self.rotational_velocity
+		    	#speeds[4] = -1 * self.cmd.axis3 * self.rotational_velocity
+		    	#speeds[3] = -1 * self.cmd.axis4 * self.rotational_velocity
 		    	#if self.cmd.btn5 and not self.cmd.axis5:
 		        #speeds[5] = self.rotational_velocity
 		    	if self.cmd.axis5 :
-		        	#speeds[5] = self.cmd.axis5 * -self.rotational_velocity
-				speeds[5] = self.cmd.axis5 -1
+		        	speeds[3] = (self.cmd.axis5-1) * -self.rotational_velocity*5
 				print self.cmd.axis5
-		    #else:
-			#self.robot.speedl_tool([0, 0, 0, 0, 0, 0], acc=1, min_time =1)
-		
-		
 		    
+		
+
 		    #for some reasons everything is inversed
 		    #speeds = [-i for i in speeds]
 		    #Now sending to robot. tol by default and base csys if btn2 is on
 		    	if speeds != [0 for _ in speeds]:
 		        	print("Sending ", speeds)
-		    	if (self.cmd.btn1):
+		    	if (self.cmd.btn5):
+				
 		        	self.robot.speedl_tool(speeds, acc=0.1, min_time =2)
 		
 		    	else:
