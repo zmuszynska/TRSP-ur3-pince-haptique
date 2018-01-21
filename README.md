@@ -11,5 +11,8 @@ La bibliothèque écrite par  SintefRaufossManufacturing :  https://github.com/S
 
 - ur3Scripts
 
-Scripts Python permettant de commander l'UR3 et les Arduino 
+Script Python permettant de contrôler le robot avec le joystick du système Saitek X52 Pro
 
+- arduinoScripts
+
+Scripts permettant de contrôler la pince via l'interface construite
