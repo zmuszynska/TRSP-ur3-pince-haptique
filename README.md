@@ -11,9 +11,5 @@ La bibliothèque écrite par  SintefRaufossManufacturing :  https://github.com/S
 
 - ur3Scripts
 
-Scripts Python permettant de commander l'UR3
-
-- hapticInterfaceScripts
-
-Scripts Arduino gérant la pince et l'interface haptique de contrôle.
+Scripts Python permettant de commander l'UR3 et les Arduino 
 
